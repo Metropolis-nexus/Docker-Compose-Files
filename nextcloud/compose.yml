@@ -7,11 +7,8 @@ services:
       - "./mariadb:/var/lib/mysql:Z"
     networks:
       - mariadb
-    environment:
-      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-      - MARIADB_DATABASE=${MARIADB_DATABASE}
-      - MARIADB_USER=${MARIADB_USER}
-      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+    env_file:
+      - mariadb.env
     user: "200011:200011"
     read_only: true
     tmpfs:
@@ -30,6 +27,10 @@ services:
       - ./valkey:/data:Z
     networks:
       - valkey
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping | grep PONG"]
+      interval: 15s
+      timeout: 5s
     user: "200010:200010"
     read_only: true
     security_opt:
@@ -39,7 +40,7 @@ services:
 
   nextcloud:
     container_name: nextcloud
-    image: ghcr.io/polarix-containers/nextcloud:29
+    image: ghcr.io/polarix-containers/nextcloud:stable
     restart: unless-stopped
     volumes:
       - ./nextcloud:/var/www/html:z
@@ -48,24 +49,11 @@ services:
       - valkey
       - nginx
     depends_on:
-      - mariadb
-      - valkey
-    environment:
-      - MYSQL_HOST=mariadb
-      - MYSQL_DATABASE=${MARIADB_DATABASE}
-      - MYSQL_USER=${MARIADB_USER}
-      - MYSQL_PASSWORD=${MARIADB_PASSWORD}
-      - REDIS_HOST=valkey
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_SECURE=${SMTP_SECURE}
-      - SMTP_PORT=${SMTP_PORT}
-      - SMTP_NAME=${SMTP_NAME}
-      - SMTP_PASSWORD=${SMTP_PASSWORD}
-      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
-      - MAIL_DOMAIN=${MAIL_DOMAIN}
-      - TRUSTED_PROXIES=${TRUSTED_PROXIES}
-      - NC_maintenance_window_start=${NC_maintenance_window_start}
-      - NC_default_phone_region=${NC_default_phone_region}
+      mariadb:
+      valkey:
+        condition: service_healthy
+    env_file:
+      - nextcloud.env
     security_opt:
       - "no-new-privileges=true"
     cap_drop:
@@ -84,8 +72,9 @@ services:
     volumes:
       - ./nextcloud:/var/www/html:z
     networks:
-      - mariadb
-      - valkey
+      mariadb:
+      valkey:
+        condition: service_healthy
     depends_on:
       - mariadb
       - valkey
@@ -110,7 +99,7 @@ services:
     networks:
       - nginx
     depends_on:
-      - nextcloud
+      nextcloud:
     user: "101:101"
     read_only: true
     tmpfs:
