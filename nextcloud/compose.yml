@@ -9,6 +9,10 @@ services:
       - mariadb
     env_file:
       - mariadb.env
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 15s
+      timeout: 5s
     user: "200011:200011"
     read_only: true
     tmpfs:
@@ -40,7 +44,7 @@ services:
 
   nextcloud:
     container_name: nextcloud
-    image: ghcr.io/polarix-containers/nextcloud:stable
+    image: ghcr.io/polarix-containers/nextcloud:latest
     restart: unless-stopped
     volumes:
       - ./nextcloud:/var/www/html:z
@@ -50,6 +54,7 @@ services:
       - nginx
     depends_on:
       mariadb:
+        condition: service_healthy
       valkey:
         condition: service_healthy
     env_file:
@@ -67,17 +72,18 @@ services:
 
   cron:
     container_name: cron
-    image: ghcr.io/polarix-containers/nextcloud:stable
+    image: ghcr.io/polarix-containers/nextcloud:latest
     restart: unless-stopped
     volumes:
       - ./nextcloud:/var/www/html:z
     networks:
-      mariadb:
-      valkey:
-        condition: service_healthy
-    depends_on:
       - mariadb
       - valkey
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
     entrypoint: /cron.sh
     security_opt:
       - "no-new-privileges=true"
@@ -100,6 +106,7 @@ services:
       - nginx
     depends_on:
       nextcloud:
+        condition: service_started
     user: "101:101"
     read_only: true
     tmpfs:
