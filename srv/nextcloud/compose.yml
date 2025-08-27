@@ -98,10 +98,11 @@ services:
     restart: unless-stopped
     image: ghcr.io/polarix-containers/nginx:unprivileged-slim
     ports:
-      - 8080:8080/tcp
+      - 8443:8443/tcp
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:Z,ro
       - ./nextcloud:/var/www/html:z
+      - ./certs:/certs:z,ro
     networks:
       - nginx
     depends_on:
