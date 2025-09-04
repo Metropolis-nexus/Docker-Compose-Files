@@ -120,5 +120,7 @@ services:
 
 networks:
   mariadb:
+    internal: true
   valkey:
+    internal: true
   nginx:
