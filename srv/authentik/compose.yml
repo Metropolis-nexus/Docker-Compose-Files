@@ -43,7 +43,7 @@ services:
 
   server:
     container_name: server
-    image: ghcr.io/polarix-containers/server:2025.8.1
+    image: ghcr.io/polarix-containers/authentik:2025.8.1
     restart: unless-stopped
     command: server
     volumes:
@@ -53,6 +53,7 @@ services:
       - "9000:9000/tcp"
       - "9443:9443/tcp"
     networks:
+      - authentik
       - postgres
       - valkey
     depends_on:
@@ -71,7 +72,7 @@ services:
 
   worker:
     container_name: worker
-    image: ghcr.io/polarix-containers/server:2025.8.1
+    image: ghcr.io/polarix-containers/authentik:2025.8.1
     restart: unless-stopped
     command: worker
     volumes:
@@ -79,6 +80,7 @@ services:
       - ./authentik/certs:/certs:Z
       - ./authentik/custom-templates:/templates:z
     networks:
+      - authentik
       - postgres
       - valkey
     depends_on:
@@ -96,5 +98,8 @@ services:
       - ALL
 
 networks:
+  authentik:
   postgres:
+    internal: true
   valkey:
+    internal: true
