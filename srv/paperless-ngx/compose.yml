@@ -1,0 +1,72 @@
+services:
+  postgres:
+    container_name: postgres
+    image: ghcr.io/polarix-containers/postgres:17
+    restart: unless-stopped
+    volumes:
+      - ./postgres:/var/lib/postgresql/data:Z
+    networks:
+      - postgres
+    env_file:
+      - postgres.env
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "paperless-ngx"]
+      interval: 15s
+      timeout: 5s
+    user: "200012:200012"
+    read_only: true
+    tmpfs:
+      - /var/run/postgresql:size=50M,mode=0770,uid=200012,gid=200012,noexec,nosuid,nodev
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
+  valkey:
+    container_name: valkey
+    image: ghcr.io/polarix-containers/valkey:8
+    restart: unless-stopped
+    volumes:
+      - ./valkey:/data:Z
+    networks:
+      - valkey
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping | grep PONG"]
+      interval: 15s
+      timeout: 5s
+    user: "200010:200010"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
+  paperless-ngx:
+    container_name: paperless-ngx
+    image: ghcr.io/polarix-containers/paperless-ngx:latest
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./paperless-ngx/data:/usr/src/paperless/data
+      - ./paperless-ngx/media:/usr/src/paperless/media
+      - ./paperless-ngx/export:/usr/src/paperless/export
+      - ./paperless-ngx/consume:/usr/src/paperless/consume
+    networks:
+      - postgres
+      - valkey
+      - paperless-ngx
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    env_file:
+      - paperless-ngx.env
+
+networks:
+  postgres:
+    internal: true
+  valkey:
+    internal: true
+  paperless-ngx:
