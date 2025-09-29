@@ -1,10 +1,11 @@
 services:
   postgres:
     container_name: postgres
-    image: ghcr.io/polarix-containers/postgres:17
+    image: ghcr.io/polarix-containers/postgres:18
     restart: unless-stopped
     volumes:
-      - ./postgres:/var/lib/postgresql/data:Z
+      - ./postgres:/var/lib/postgresql/18/docker:Z
+      - ./postgres_dump:/dump:Z
     networks:
       - postgres
     env_file:
