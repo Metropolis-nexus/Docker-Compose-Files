@@ -1,0 +1,72 @@
+services:
+  # Frontend
+  web:
+    container_name: jitsi-web
+    image: jitsi/web:unstable
+    restart: unless-stopped
+    volumes:
+      - /srv/jitsi/web:/config:Z
+      - /srv/jitsi/web/crontabs:/var/spool/cron/crontabs:Z
+      - /srv/jitsi/transcripts:/usr/share/jitsi-meet/transcripts:Z
+      - /srv/jitsi/web/load-test:/usr/share/jitsi-meet/load-test:Z
+    ports:
+      - 8000:80/tcp
+    networks:
+      - jitsi
+    depends_on:
+      - jvb
+    env_file:
+      - common.env
+      - web.env
+
+  # XMPP server
+  prosody:
+    container_name: jitsi-prosody
+    image: jitsi/prosody:unstable
+    restart: unless-stopped
+    volumes:
+      - /srv/jitsi/prosody/config:/config:Z
+      - /srv/jitsi/prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
+      - /srv/jitsi/prosody-config-override:/etc/cont-init.d/10-config:Z
+    networks:
+      jitsi:
+        aliases:
+          - xmpp.meet.jitsi
+    env_file:
+      - common.env
+      - prosody.env
+
+  # Focus component
+  jicofo:
+    container_name: jitsi-jicofo
+    image: jitsi/jicofo:unstable
+    restart: unless-stopped
+    volumes:
+      - /srv/jitsi/jicofo:/config:Z
+    networks:
+      - jitsi
+    depends_on:
+      - prosody
+    env_file:
+      - common.env
+      - jicofo.env
+
+  # Video bridge
+  jvb:
+    container_name: jitsi-jvb
+    image: jitsi/jvb:unstable
+    restart: unless-stopped
+    volumes:
+      - /srv/jitsi/jvb:/config:Z
+    ports:
+      - 10000:10000/udp
+    networks:
+      - jitsi
+    depends_on:
+      - prosody
+    env_file:
+      - common.env
+      - jvb.env
+
+networks:
+  jitsi:
