@@ -64,8 +64,8 @@ VirtualHost "meet.jitsi"
         
         "muc_breakout_rooms";
         
-        
         "external_services";
+        
         
         
 
@@ -74,6 +74,8 @@ VirtualHost "meet.jitsi"
     main_muc = "muc.meet.jitsi"
     
     lobby_muc = "lobby.meet.jitsi"
+    
+    muc_lobby_whitelist = { "hidden.meet.jitsi" }
     
     
 
@@ -85,7 +87,7 @@ VirtualHost "meet.jitsi"
 
     c2s_require_encryption = true
 
-
+    
     external_service_host = "turn.metropolis.nexus"
     external_service_port = 5349
     external_service_secret = "REDACTED"
@@ -109,6 +111,12 @@ VirtualHost "auth.meet.jitsi"
     authentication = "internal_hashed"
     smacks_hibernation_time = 15;
 
+
+VirtualHost "hidden.meet.jitsi"
+    modules_enabled = {
+      "smacks";
+    }
+    authentication = "internal_hashed"
 
 
 Component "internal-muc.meet.jitsi" "muc"
@@ -147,6 +155,7 @@ Component "muc.meet.jitsi" "muc"
     
     muc_password_whitelist = {
         "focus@auth.meet.jitsi";
+        "recorder@hidden.meet.jitsi";
     }
     muc_tombstones = false
     muc_room_allow_persistent = false
