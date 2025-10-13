@@ -87,5 +87,17 @@ services:
     shm_size: '2gb'
     runtime: runc
 
+  # Whiteboard
+  whiteboard:
+    container_name: jitsi-whiteboard
+    image: jitsi/excalidraw-backend:21
+    restart: unless-stopped
+    networks:
+      jitsi:
+        aliases:
+          - whiteboard.meet.jitsi
+    depends_on:
+      - web
+
 networks:
   jitsi:
