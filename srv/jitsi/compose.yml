@@ -68,5 +68,24 @@ services:
       - common.env
       - jvb.env
 
+  # Video recorder
+  jibri:
+    container_name: jitsi-jibri
+    image: jitsi/jibri:unstable
+    restart: unless-stopped
+    volumes:
+      - /srv/jitsi/jibri:/config:Z
+    networks:
+      - jitsi
+    depends_on:
+      - jicofo
+    env_file:
+      - common.env
+      - jibri.env
+    cap_add:
+      - SYS_ADMIN
+    shm_size: '2gb'
+    runtime: runc
+
 networks:
   jitsi:
