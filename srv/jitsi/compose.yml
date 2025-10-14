@@ -2,7 +2,7 @@ services:
   # Frontend
   web:
     container_name: jitsi-web
-    image: jitsi/web:stable-10532-1
+    image: jitsi/web:stable
     restart: unless-stopped
     volumes:
       - /srv/jitsi/web:/config:Z
@@ -22,7 +22,7 @@ services:
   # XMPP server
   prosody:
     container_name: jitsi-prosody
-    image: jitsi/prosody:stable-10532-1
+    image: jitsi/prosody:stable
     restart: unless-stopped
     volumes:
       - /srv/jitsi/prosody/config:/config:Z
@@ -39,7 +39,7 @@ services:
   # Focus component
   jicofo:
     container_name: jitsi-jicofo
-    image: jitsi/jicofo:stable-10532-1
+    image: jitsi/jicofo:stable
     restart: unless-stopped
     volumes:
       - /srv/jitsi/jicofo:/config:Z
@@ -54,7 +54,7 @@ services:
   # Video bridge
   jvb:
     container_name: jitsi-jvb
-    image: jitsi/jvb:stable-10532-1
+    image: jitsi/jvb:stable
     restart: unless-stopped
     volumes:
       - /srv/jitsi/jvb:/config:Z
@@ -71,7 +71,7 @@ services:
   # Video recorder
   jibri:
     container_name: jitsi-jibri
-    image: jitsi/jibri:stable-10532-1
+    image: jitsi/jibri:stable
     restart: unless-stopped
     volumes:
       - /srv/jitsi/jibri:/config:Z
