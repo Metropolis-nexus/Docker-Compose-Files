@@ -5,19 +5,19 @@ services:
     image: jitsi/web:stable
     restart: unless-stopped
     volumes:
-      - /srv/jitsi/web:/config:Z
-      - /srv/jitsi/web/crontabs:/var/spool/cron/crontabs:Z
-      - /srv/jitsi/transcripts:/usr/share/jitsi-meet/transcripts:Z
-      - /srv/jitsi/web/load-test:/usr/share/jitsi-meet/load-test:Z
+      - ./web:/config:Z
+      - ./web/crontabs:/var/spool/cron/crontabs:Z
+      - ./transcripts:/usr/share/jitsi-meet/transcripts:Z
+      - ./web/load-test:/usr/share/jitsi-meet/load-test:Z
     ports:
       - 8000:80/tcp
     networks:
       - jitsi
+      - etherpad
     depends_on:
       - jvb
     env_file:
       - common.env
-      - web.env
 
   # XMPP server
   prosody:
@@ -25,9 +25,9 @@ services:
     image: jitsi/prosody:stable
     restart: unless-stopped
     volumes:
-      - /srv/jitsi/prosody/config:/config:Z
-      - /srv/jitsi/prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
-      - /srv/jitsi/prosody-config-override:/etc/cont-init.d/10-config:Z
+      - ./prosody/config:/config:Z
+      - ./prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
+      - ./cont-init-override:/etc/cont-init.d/10-config:Z
     networks:
       jitsi:
         aliases:
@@ -42,7 +42,7 @@ services:
     image: jitsi/jicofo:stable
     restart: unless-stopped
     volumes:
-      - /srv/jitsi/jicofo:/config:Z
+      - ./jicofo:/config:Z
     networks:
       - jitsi
     depends_on:
@@ -57,7 +57,7 @@ services:
     image: jitsi/jvb:stable
     restart: unless-stopped
     volumes:
-      - /srv/jitsi/jvb:/config:Z
+      - ./jvb:/config:Z
     ports:
       - 10000:10000/udp
     networks:
@@ -69,23 +69,23 @@ services:
       - jvb.env
 
   # Video recorder
-  jibri:
-    container_name: jitsi-jibri
-    image: jitsi/jibri:stable
-    restart: unless-stopped
-    volumes:
-      - /srv/jitsi/jibri:/config:Z
-    networks:
-      - jitsi
-    depends_on:
-      - jicofo
-    env_file:
-      - common.env
-      - jibri.env
-    cap_add:
-      - SYS_ADMIN
-    shm_size: '2gb'
-    runtime: runc
+#  jibri:
+#    container_name: jitsi-jibri
+#    image: jitsi/jibri:stable
+#    restart: unless-stopped
+#    volumes:
+#      - ./jibri:/config:Z
+#    networks:
+#      - jitsi
+#    depends_on:
+#      - jicofo
+#    env_file:
+#      - common.env
+#      - jibri.env
+#    cap_add:
+#      - SYS_ADMIN
+#    shm_size: '2gb'
+#    runtime: runc
 
   # Whiteboard
   whiteboard:
@@ -99,5 +99,64 @@ services:
     depends_on:
       - web
 
+  # Shared documents
+  etherpad:
+    container_name: jitsi-etherpad
+    image: etherpad/etherpad:latest
+    restart: unless-stopped
+    ports:
+      - 9001:9001/tcp
+    networks:
+      etherpad:
+        aliases:
+          - etherpad.meet.jitsi
+      postgres:
+    env_file:
+      - etherpad.env
+
+  postgres:
+    container_name: jitsi-postgres
+    image: ghcr.io/polarix-containers/postgres:18
+    restart: unless-stopped
+    volumes:
+      - ./postgres:/var/lib/postgresql/18/docker:Z
+      - ./postgres_dump:/dump:Z
+    networks:
+      - postgres
+    env_file:
+      - postgres.env
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "etherpad"]
+      interval: 15s
+      timeout: 5s
+    user: "200012:200012"
+    read_only: true
+    tmpfs:
+      - /var/run/postgresql:size=50M,mode=0770,uid=200012,gid=200012,noexec,nosuid,nodev
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
+  # Keycloak adapter
+  keycloak-adapter:
+    container_name: jitsi-keycloak-adapter
+    image: ghcr.io/nordeck/jitsi-keycloak-adapter-v2:latest
+    restart: unless-stopped
+    # Custom patching
+    # https://github.com/nordeck/jitsi-keycloak-adapter-v2/pull/5
+    volumes:
+      - ./keycloak-adapter/adapter.ts:/app/adapter.ts:Z
+    ports:
+      - 9000:9000/tcp
+    networks:
+      - keycloak-adapter
+    env_file:
+      - keycloak-adapter.env
+
 networks:
   jitsi:
+  etherpad:
+  postgres:
+    internal: true
+  keycloak-adapter:

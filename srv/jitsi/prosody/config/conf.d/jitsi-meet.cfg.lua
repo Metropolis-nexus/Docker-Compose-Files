@@ -44,7 +44,16 @@ smacks_max_old_sessions = 1;
 
 VirtualHost "meet.jitsi"
 
-    authentication = "jitsi-anonymous"
+  
+  authentication = "token"
+    app_id = "jitsi"
+    
+    app_secret = "REDACTED"
+    
+    allow_empty_token = false
+    
+    enable_domain_verification = false
+  
 
     ssl = {
         key = "/config/certs/meet.jitsi.key";
@@ -64,10 +73,14 @@ VirtualHost "meet.jitsi"
         
         "muc_breakout_rooms";
         
+        
         "external_services";
+        "persistent_lobby";
         
         
         
+        
+        "jibri_session";
 
     }
 
@@ -87,7 +100,6 @@ VirtualHost "meet.jitsi"
 
     c2s_require_encryption = true
 
-    
     external_service_host = "turn.metropolis.nexus"
     external_service_port = 5349
     external_service_secret = "REDACTED"
@@ -96,7 +108,30 @@ VirtualHost "meet.jitsi"
         {type = "stun", transport = "tcp"},
         {type = "turn", transport = "udp", secret = true},
         {type = "turn", transport = "tcp", secret = true}
+    }    
+
+    
+VirtualHost "guest.meet.jitsi"
+    authentication = "jitsi-anonymous"
+    modules_enabled = {
+        
+        "smacks"; -- XEP-0198: Stream Management
+        
+        
+        "external_services";
+        "persistent_lobby";
+        
     }
+    main_muc = "muc.meet.jitsi"
+    c2s_require_encryption = true
+    
+    
+    lobby_muc = "lobby.meet.jitsi"
+    
+    
+    breakout_rooms_muc = "breakout.meet.jitsi"
+    
+
     
 
 VirtualHost "auth.meet.jitsi"
@@ -106,6 +141,7 @@ VirtualHost "auth.meet.jitsi"
     }
     modules_enabled = {
         "limits_exception";
+        "jibri_session";
         "smacks";
     }
     authentication = "internal_hashed"
@@ -139,7 +175,10 @@ Component "muc.meet.jitsi" "muc"
     modules_enabled = {
         "muc_hide_all";
         "muc_meeting_id";
+        "muc_wait_for_host";
+        "token_verification";
         
+        "polls";
         "muc_domain_mapper";
         
         "muc_password_whitelist";
@@ -203,14 +242,10 @@ Component "breakout.meet.jitsi" "muc"
     modules_enabled = {
         "muc_hide_all";
         "muc_meeting_id";
+        "polls";
         }
 
 
 Component "metadata.meet.jitsi" "room_metadata_component"
     muc_component = "muc.meet.jitsi"
     breakout_rooms_component = "breakout.meet.jitsi"
-
-
-
-
-Component "polls.meet.jitsi" "polls_component"
