@@ -29,7 +29,7 @@ services:
     volumes:
       - ./prosody/config:/config:Z
       - ./prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
-      - ./cont-init-override:/etc/cont-init.d/10-config:Z
+#      - ./cont-init-override:/etc/cont-init.d/10-config:Z
     networks:
       jitsi:
         aliases:
@@ -37,6 +37,12 @@ services:
     env_file:
       - common.env
       - prosody.env
+#    user: "300004:300004"
+#    security_opt:
+#      - "no-new-privileges=true"
+#    cap_drop:
+#      - ALL
+#    entrypoint: /usr/bin/prosody --config /config/prosody.cfg.lua -F
 
   # Focus component
   jicofo:
@@ -163,6 +169,10 @@ services:
       - keycloak-adapter
     env_file:
       - keycloak-adapter.env
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
 
 networks:
   jitsi:
