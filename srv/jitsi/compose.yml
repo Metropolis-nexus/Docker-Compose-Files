@@ -100,6 +100,10 @@ services:
           - whiteboard.meet.jitsi
     depends_on:
       - web
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
 
   # Shared documents
   etherpad:
@@ -115,6 +119,10 @@ services:
       postgres:
     env_file:
       - etherpad.env
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
 
   postgres:
     container_name: jitsi-postgres
