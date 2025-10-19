@@ -9,8 +9,10 @@ services:
       - ./web/crontabs:/var/spool/cron/crontabs:Z
       - ./transcripts:/usr/share/jitsi-meet/transcripts:Z
       - ./web/load-test:/usr/share/jitsi-meet/load-test:Z
+      - ./certs/fullchain.pem:/config/keys/cert.crt:Z,ro
+      - ./certs/privkey.pem:/config/keys/cert.key:Z,ro
     ports:
-      - 8000:80/tcp
+      - 8443:443/tcp
     networks:
       - jitsi
       - etherpad

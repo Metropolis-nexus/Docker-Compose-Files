@@ -1,0 +1,8 @@
+Description=Monitor Jitsi certificates
+
+[Path]
+PathChanged=/srv/jitsi/certs
+Unit=jitsi-sync.service
+
+[Install]
+WantedBy=multi-user.target

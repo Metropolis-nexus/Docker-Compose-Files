@@ -1,0 +1,7 @@
+[Unit]
+Description=Synchronize Jitsi certificates
+Requisite=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/docker restart jitsi-web
