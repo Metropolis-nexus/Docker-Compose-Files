@@ -38,6 +38,7 @@ services:
       - common.env
       - prosody.env
 #    user: "300004:300004"
+#    read_only: true
 #    security_opt:
 #      - "no-new-privileges=true"
 #    cap_drop:
