@@ -37,7 +37,7 @@ services:
     env_file:
       - common.env
       - prosody.env
-#    user: "300004:300004"
+#    user: "300005:300005"
 #    read_only: true
 #    security_opt:
 #      - "no-new-privileges=true"
