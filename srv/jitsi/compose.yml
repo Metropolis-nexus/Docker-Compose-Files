@@ -174,7 +174,7 @@ services:
     # Custom patching
     # https://github.com/nordeck/jitsi-keycloak-adapter-v2/pull/5
     volumes:
-      - ./keycloak-adapter/adapter.ts:/app/adapter.ts:Z
+      - ./keycloak-adapter/adapter.ts:/app/adapter.ts:Z,ro
     ports:
       - 9000:9000/tcp
     networks:
