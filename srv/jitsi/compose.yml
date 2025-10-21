@@ -11,6 +11,7 @@ services:
       - ./web/load-test:/usr/share/jitsi-meet/load-test:Z
       - ./certs/fullchain.pem:/config/keys/cert.crt:Z,ro
       - ./certs/privkey.pem:/config/keys/cert.key:Z,ro
+      - ./cont-init-override:/etc/cont-init.d/10-config:Z
     ports:
       - 8443:443/tcp
     networks:
@@ -20,6 +21,16 @@ services:
       - jvb
     env_file:
       - common.env
+    user: "300005:300005"
+    read_only: true
+    tmpfs:
+      - /var/lib/nginx:mode=0770,uid=300005,gid=300005,noexec,nosuid,nodev
+      - /run:mode=0770,uid=300005,gid=300005,noexec,nosuid,nodev
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+    entrypoint: nginx -c /config/nginx/nginx.conf
 
   # XMPP server
   prosody:
@@ -29,7 +40,7 @@ services:
     volumes:
       - ./prosody/config:/config:Z
       - ./prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
-#      - ./cont-init-override:/etc/cont-init.d/10-config:Z
+      - ./cont-init-override:/etc/cont-init.d/10-config:Z
     networks:
       jitsi:
         aliases:
@@ -37,13 +48,13 @@ services:
     env_file:
       - common.env
       - prosody.env
-#    user: "300005:300005"
-#    read_only: true
-#    security_opt:
-#      - "no-new-privileges=true"
-#    cap_drop:
-#      - ALL
-#    entrypoint: /usr/bin/prosody --config /config/prosody.cfg.lua -F
+    user: "300006:300006"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+    entrypoint: /usr/bin/prosody --config /config/prosody.cfg.lua -F
 
   # Focus component
   jicofo:
@@ -170,6 +181,8 @@ services:
       - keycloak-adapter
     env_file:
       - keycloak-adapter.env
+    user: "300007:300007"
+    read_only: true
     security_opt:
       - "no-new-privileges=true"
     cap_drop:
