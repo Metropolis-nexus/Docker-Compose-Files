@@ -23,43 +23,22 @@ services:
     cap_drop:
       - ALL
 
-  valkey:
-    container_name: valkey
-    image: ghcr.io/polarix-containers/valkey:8
-    restart: unless-stopped
-    volumes:
-      - ./valkey:/data:Z
-    networks:
-      - valkey
-    healthcheck:
-      test: ["CMD-SHELL", "valkey-cli ping | grep PONG"]
-      interval: 15s
-      timeout: 5s
-    user: "200010:200010"
-    read_only: true
-    security_opt:
-      - "no-new-privileges=true"
-    cap_drop:
-      - ALL
-
   server:
     container_name: server
-    image: ghcr.io/polarix-containers/authentik:2025.8.4
+    image: ghcr.io/polarix-containers/authentik:2025.10.0
     restart: unless-stopped
     command: server
     volumes:
       - ./authentik/media:/media:z
       - ./authentik/custom-templates:/templates:z
     ports:
+      - "9000:9000/tcp"
       - "9443:9443/tcp"
     networks:
       - authentik
       - postgres
-      - valkey
     depends_on:
       postgres:
-        condition: service_healthy
-      valkey:
         condition: service_healthy
     env_file:
       - authentik.env
@@ -72,7 +51,7 @@ services:
 
   worker:
     container_name: worker
-    image: ghcr.io/polarix-containers/authentik:2025.8.4
+    image: ghcr.io/polarix-containers/authentik:2025.10.0
     restart: unless-stopped
     command: worker
     volumes:
@@ -82,11 +61,8 @@ services:
     networks:
       - authentik
       - postgres
-      - valkey
     depends_on:
       postgres:
-        condition: service_healthy
-      valkey:
         condition: service_healthy
     env_file:
       - authentik.env
@@ -100,6 +76,4 @@ services:
 networks:
   authentik:
   postgres:
-    internal: true
-  valkey:
     internal: true
