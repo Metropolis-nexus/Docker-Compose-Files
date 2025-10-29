@@ -23,12 +23,17 @@ enable_search: true
 
 listeners:
   - port: 8008
-    tls: false
     type: http
+    tls: false
     x_forwarded: true
     resources:
       - names: [client, federation]
         compress: false
+  - port: 9093
+    type: http
+    tls: false
+    resources:
+      - names: [replication]
 
 matrix_authentication_service:
   enabled: true
