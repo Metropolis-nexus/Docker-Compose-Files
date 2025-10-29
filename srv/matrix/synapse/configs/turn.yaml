@@ -1,0 +1,4 @@
+turn_uris: [ "turns:turn.metropolis.nexus?transport=udp", "turns:turn.metropolis.nexus?transport=tcp", "turn:turn.metropolis.nexus?transport=udp", "turn:turn.metropolis.nexus?transport=tcp" ]
+turn_shared_secret: REDACTED
+turn_user_lifetime: 1h
+turn_allow_guests: false

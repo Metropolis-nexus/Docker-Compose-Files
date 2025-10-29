@@ -1,0 +1,95 @@
+http:
+  listeners:
+  - name: web
+    resources:
+    - name: discovery
+    - name: human
+    - name: oauth
+    - name: compat
+    - name: graphql
+    - name: assets
+    binds:
+    - address: '[::]:8080'
+    proxy_protocol: false
+  - name: internal
+    resources:
+    - name: health
+    binds:
+    - host: localhost
+      port: 8081
+    proxy_protocol: false
+  trusted_proxies:
+  - 192.168.2.102/32
+  public_base: https://mas.metropolis.nexus/
+  issuer: https://mas.metropolis.nexus/
+database:
+  host: mas-postgres
+  port: 5432
+  username: mas
+  password: REDACTED
+  database: mas
+  max_connections: 10
+  min_connections: 0
+  connect_timeout: 30
+  idle_timeout: 600
+  max_lifetime: 1800
+email:
+  from: '"Metropolis Matrix Authentication" <mas.system@metropolis.nexus>'
+  reply_to: '"Metropolis Matrix Authentication" <mas.system@metropolis.nexus>'
+  transport: smtp
+  mode: tls
+  hostname: mail.metropolis.nexus
+  port: 465
+  username: mas.system@metropolis.nexus
+  password: REDACTED
+secrets:
+  REDACTED
+passwords:
+  enabled: true
+  minimum_complexity: 3
+  schemes:
+    - version: 1
+      algorithm: argon2id
+matrix:
+  kind: synapse
+  homeserver: metropolis.nexus
+  secret: REDACTED
+  endpoint: http://synapse:8008/
+account:
+  email_change_allowed: true
+  displayname_change_allowed: true
+  password_registration_enabled: false
+  password_registration_email_required: true
+  password_change_allowed: true
+  password_recovery_enabled: true
+  # This has to be hooked up with Authentik later
+  account_deactivation_allowed: false
+  login_with_email_allowed: false
+  registration_token_required: false
+upstream_oauth2:
+  providers:
+    - id: 01HFRQFT5QFMJFGF01P7JAV2ME
+      human_name: Authentik
+      issuer: "https://auth.metropolis.nexus/application/o/matrix/"
+      client_id: "REDACTED"
+      client_secret: "REDACTED"
+      token_endpoint_auth_method: client_secret_basic
+      scope: "openid profile email"
+      discovery_mode: oidc
+      pkce_method: always
+      fetch_userinfo: true
+      on_backchannel_logout: logout_browser_only
+      claims_imports:
+        localpart:
+          action: require
+          # https://github.com/element-hq/matrix-authentication-service/issues/3593
+          template: "{{ user.preferred_username | lower }}"
+        displayname:
+          action: suggest
+          template: "{{ user.name }}"
+        email:
+          action: suggest
+          template: "{{ user.email }}"
+          set_email_verification: import
+branding:
+  service_name: "Metropolis Matrix Authentication"

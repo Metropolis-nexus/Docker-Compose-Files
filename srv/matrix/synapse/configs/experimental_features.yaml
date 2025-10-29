@@ -1,0 +1,4 @@
+experimental_features:
+  msc4108_enabled: true # Login with QR code
+  msc3266_enabled: true # Room summary API - Needed for Element Call
+  msc4222_enabled: true # Adding state_after to sync v2 - Needed for Element Call

@@ -1,0 +1,59 @@
+server_name: metropolis.nexus
+
+# May turn on later if we have a problem
+use_frozen_dicts: false
+
+web_client_location: https://element.metropolis.nexus
+public_baseurl: https://matrix.metropolis.nexus
+serve_server_wellknown: true
+
+presence:
+  enabled: true
+  include_offline_users_on_sync: false
+
+require_auth_for_profile_requests: true
+limit_profile_requests_to_users_who_share_rooms: false
+include_profile_data_on_invite: true
+
+allow_public_rooms_without_auth: false
+allow_public_rooms_over_federation: true
+default_room_version: '12'
+block_non_admin_invites: false
+enable_search: true
+
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    resources:
+      - names: [client, federation]
+        compress: false
+
+matrix_authentication_service:
+  enabled: true
+  secret: REDACTED
+
+  endpoint: http://mas:8080
+
+delete_stale_devices_after: 90d
+
+email:
+  smtp_host: mail.metropolis.nexus
+  smtp_port: 465
+  smtp_user: matrix.system@metropolis.nexus
+  smtp_pass: REDACTED
+  force_tls: true
+  require_transport_security: true
+  enable_tls: true
+  tlsname: mail.metropolis.nexus
+  notif_from: Metropolis Matrix <matrix.system@metropolis.nexus>
+  app_name: Metropolis Matrix
+  enable_notifs: true
+  notif_for_new_users: false
+  client_base_url: https://element.metropolis.nexus
+  validation_token_lifetime: 1h
+  invite_client_location: https://element.metropolis.nexus
+
+# https://github.com/element-hq/element-call/blob/livekit/docs/self-hosting.md
+max_event_delay_duration: 24h

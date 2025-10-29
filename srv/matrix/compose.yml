@@ -1,0 +1,192 @@
+services:
+  synapse-postgres:
+    container_name: synapse-postgres
+    image: ghcr.io/polarix-containers/postgres:18
+    restart: unless-stopped
+    volumes:
+      - ./synapse-postgres:/var/lib/postgresql/18/docker:Z
+      - ./synapse-postgres_dump:/dump:Z
+    networks:
+      - synapse-postgres
+    env_file:
+      - synapse-postgres.env
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "synapse"]
+      interval: 15s
+      timeout: 5s
+    user: "200012:200012"
+    read_only: true
+    tmpfs:
+      - /var/run/postgresql:size=50M,mode=0770,uid=200012,gid=200012,noexec,nosuid,nodev
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
+  valkey:
+    container_name: valkey
+    image: ghcr.io/polarix-containers/valkey:8
+    restart: unless-stopped
+    volumes:
+      - ./valkey:/data:Z
+    networks:
+      - valkey
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping | grep PONG"]
+      interval: 15s
+      timeout: 5s
+    user: "200010:200010"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
+  synapse:
+    image: ghcr.io/polarix-containers/synapse:latest
+    container_name: synapse
+    restart: unless-stopped
+    volumes:
+      - ./synapse:/data:Z
+    ports:
+      - "8008:8008/tcp"
+    networks:
+      - matrix
+      - synapse-postgres
+      - valkey
+    depends_on:
+      synapse-postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    user: "200002:200002"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    entrypoint: ["python3", "start.py", "run", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
+
+  generic-worker-1:
+    image: ghcr.io/polarix-containers/synapse:latest
+    container_name: generic-worker-1
+    restart: unless-stopped
+    volumes:
+      - ./synapse:/data:Z
+    ports:
+      - "8009:8009/tcp"
+    networks:
+      - matrix
+      - synapse-postgres
+      - valkey
+    depends_on:
+      synapse-postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fSs http://localhost:8009/health || exit 1"]
+      start_period: "5s"
+      interval: "15s"
+      timeout: "5s"
+    user: "200002:200002"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/generic-worker-1.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
+
+  generic-worker-2:
+    image: ghcr.io/polarix-containers/synapse:latest
+    container_name: generic-worker-2
+    restart: unless-stopped
+    volumes:
+      - ./synapse:/data:Z
+    ports:
+      - "8010:8010/tcp"
+    networks:
+      - matrix
+      - synapse-postgres
+      - valkey
+    depends_on:
+      synapse-postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fSs http://localhost:8010/health || exit 1"]
+      start_period: "5s"
+      interval: "15s"
+      timeout: "5s"
+    user: "200002:200002"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/generic-worker-2.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
+
+  element:
+    image: ghcr.io/polarix-containers/element-web:latest
+    container_name: element
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./element/config.json:/app/config.json:ro,Z
+    user: "101:101"
+    read_only: true
+    tmpfs:
+      - /etc/nginx/conf.d:size=50M,mode=0770,noexec,nosuid,nodev,uid=101
+      - /var/cache/nginx:size=50M,mode=0770,noexec,nosuid,nodev,uid=101
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  mas-postgres:
+    container_name: mas-postgres
+    image: ghcr.io/polarix-containers/postgres:18
+    restart: unless-stopped
+    volumes:
+      - ./mas-postgres:/var/lib/postgresql/18/docker:Z
+      - ./mas-postgres_dump:/dump:Z
+    networks:
+      - mas-postgres
+    env_file:
+      - mas-postgres.env
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "mas"]
+      interval: 15s
+      timeout: 5s
+    user: "200012:200012"
+    read_only: true
+    tmpfs:
+      - /var/run/postgresql:size=50M,mode=0770,uid=200012,gid=200012,noexec,nosuid,nodev
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
+  mas:
+    container_name: mas
+    image: ghcr.io/element-hq/matrix-authentication-service:latest
+    restart: unless-stopped
+    volumes:
+      - ./mas/config.yaml:/config.yaml:Z
+    ports:
+      - "8081:8080/tcp"
+    networks:
+      - matrix
+      - mas-postgres
+    depends_on:
+      mas-postgres:
+        condition: service_healthy
+
+networks:
+  matrix:
+  element:
+  synapse-postgres:
+    internal: true
+  valkey:
+    internal: true
+  mas-postgres:
+    internal: true

@@ -1,0 +1,24 @@
+
+listeners:
+  - port: 9093
+    bind_address: '0.0.0.0'
+    type: http
+    resources:
+     - names: [replication]
+
+worker_replication_secret: REDACTED
+
+redis:
+  enabled: true
+  host: 'valkey'
+
+instance_map:
+  main:
+    host: 'synapse'
+    port: 9093
+  generic-worker-1:
+    host: 'generic-worker-1'
+    port: 9093
+  generic-worker-2:
+    host: 'generic-worker-1'
+    port: 9093

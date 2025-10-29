@@ -1,0 +1,9 @@
+worker_app: synapse.app.generic_worker
+worker_name: generic-worker-2
+
+worker_listeners:
+  - type: http
+    port: 8010
+    x_forwarded: true
+    resources:
+      - names: [client, federation]

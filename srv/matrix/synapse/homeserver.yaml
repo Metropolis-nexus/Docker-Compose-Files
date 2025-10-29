@@ -1,0 +1,2 @@
+pid_file: /data/homeserver.pid
+log_config: "/data/matrix.metropolis.nexus.log.config"

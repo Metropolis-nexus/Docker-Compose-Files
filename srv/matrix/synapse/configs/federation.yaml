@@ -1,0 +1,2 @@
+allow_profile_lookup_over_federation: true
+allow_device_name_lookup_over_federation: true

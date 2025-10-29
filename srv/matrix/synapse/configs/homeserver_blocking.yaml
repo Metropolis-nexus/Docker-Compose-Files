@@ -1,0 +1,10 @@
+admin_contact: mailto:tommy@metropolis.nexus
+require_membership_for_aliases: true
+allow_per_room_profiles: true
+max_avatar_size: 10M
+redaction_retention_period: 30d
+forgotten_room_retention_period: 30d
+user_ips_max_age: 90d
+
+retention:
+  enabled: false

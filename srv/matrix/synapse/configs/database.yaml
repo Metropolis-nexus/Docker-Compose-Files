@@ -1,0 +1,11 @@
+database:
+  name: psycopg2
+  txn_limit: 10000
+  args:
+    user: synapse
+    password: REDACTED
+    dbname: synapse
+    host: synapse-postgres
+    port: 5432
+    cp_min: 5
+    cp_max: 10

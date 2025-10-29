@@ -1,0 +1,30 @@
+encryption_enabled_by_default_for_room_type: invite
+
+user_directory:
+  enabled: true
+  search_all_users: true
+  prefer_local_users: true
+  exclude_remote_users: false
+  show_locked_users: false
+
+stats:
+  enabled: true
+
+server_notices:
+  system_mxid_localpart: notices
+  system_mxid_display_name: Metropolis Notices
+#  system_mxid_avatar_url: mxc://example.com/oumMVlgDnLYFaPVkExemNVVZ
+  room_name: Metropolis Notices
+#  room_avatar_url: mxc://example.com/oumMVlgDnLYFaPVkExemNVVZ
+  room_topic: Room used by your server admin to notice you of important information
+  auto_join: true
+
+enable_room_list_search: true
+
+alias_creation_rules:
+- action: allow
+
+room_list_publication_rules:
+- action: allow
+
+forget_rooms_on_leave: true

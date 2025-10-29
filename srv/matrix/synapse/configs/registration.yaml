@@ -1,0 +1,7 @@
+enable_registration: false
+enable_registration_without_verification: false
+allow_guest_access: false
+enable_set_displayname: true
+enable_set_avatar_url: true
+enable_3pid_changes: false
+allow_underscore_prefixed_registration: false

@@ -1,0 +1,49 @@
+{
+  "disable_custom_urls": true,
+  "default_server_config": {
+    "m.homeserver": {
+      "base_url": "https://matrix.metropolis.nexus",
+      "server_name": "metropolis.nexus"
+    }
+  },
+  "show_labs_settings": true,
+  "default_federate": true,
+  "default_country_code": "US",
+  "room_directory": {
+    "servers": ["metropolis.nexus", "grapheneos.org", "matrix.org"]
+  },
+  "default_theme": "dark",
+  "brand": "Metropolis Element",
+  "mobile_guide_toast": true,
+  "mobile_guide_app_variant": "element",
+  "branding": {
+    "welcome_background_url": "https://static.metropolis.nexus/element.jpg",
+    "auth_footer_links": []
+  },
+  "disable_3pid_login": false,
+  "disable_guests": true,
+  "jitsi": {
+    "preferred_domain": "jitsi.metropolis.nexus"
+  },
+  "integrations_ui_url": null,
+  "integrations_rest_url": null,
+  "integrations_widgets_urls": [],
+  "UIFeature": {
+     "urlPreviews": true,
+     "feedback": false,
+     "voip": true,
+     "widgets": true,
+     "advancedSettings": true,
+     "thirdPartyId": true,
+     "registration": false,
+     "passwordReset": false,
+     "deactivate": false,
+     "advancedEncryption": true,
+     "roomHistorySettings": true,
+     "TimelineEnableRelativeDates": false,
+     "BulkUnverifiedSessionsReminder": true,
+     "locationSharing" :false,
+     "allowCreatingPublicRooms": true,
+     "allowCreatingPublicSpaces": true
+  }
+}
