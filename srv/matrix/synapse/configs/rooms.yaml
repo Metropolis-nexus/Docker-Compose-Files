@@ -1,4 +1,5 @@
-encryption_enabled_by_default_for_room_type: invite
+# We need users to be able to create unencrypted private rooms for Draupnir
+encryption_enabled_by_default_for_room_type: off
 
 user_directory:
   enabled: true
