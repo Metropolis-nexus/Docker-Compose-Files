@@ -124,6 +124,35 @@ services:
       - ALL
     entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/generic-worker-2.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
 
+  no-load-balance-worker:
+    image: ghcr.io/polarix-containers/synapse:latest
+    container_name: no-load-balance-worker
+    restart: unless-stopped
+    volumes:
+      - ./synapse:/data:Z
+    ports:
+      - "8011:8011/tcp"
+    networks:
+      - matrix
+      - synapse-postgres
+      - valkey
+    depends_on:
+      synapse-postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fSs http://localhost:8011/health || exit 1"]
+      start_period: "5s"
+      interval: "15s"
+      timeout: "5s"
+    user: "200002:200002"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/no-load-balance-worker.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
+
   element:
     image: ghcr.io/polarix-containers/element-web:latest
     container_name: element

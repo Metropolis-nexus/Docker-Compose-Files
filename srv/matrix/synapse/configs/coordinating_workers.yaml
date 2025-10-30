@@ -1,4 +1,6 @@
 worker_replication_secret: REDACTED
+update_user_directory_from_worker: no-load-balance-worker
+notify_appservices_from_worker: no-load-balance-worker
 
 redis:
   enabled: true
