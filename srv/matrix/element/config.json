@@ -10,7 +10,7 @@
   "default_federate": true,
   "default_country_code": "US",
   "room_directory": {
-    "servers": ["metropolis.nexus", "grapheneos.org", "matrix.org"]
+    "servers": ["metropolis.nexus", "grapheneos.org", "matrix.org", "matrixrooms.info"]
   },
   "default_theme": "dark",
   "brand": "Metropolis Element",
