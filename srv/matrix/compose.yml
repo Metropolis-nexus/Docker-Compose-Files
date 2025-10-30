@@ -168,7 +168,7 @@ services:
 
   mas:
     container_name: mas
-    image: ghcr.io/element-hq/matrix-authentication-service:latest
+    image: ghcr.io/polarix-containers/matrix-authentication-service:latest
     restart: unless-stopped
     volumes:
       - ./mas/config.yaml:/config.yaml:Z
@@ -180,6 +180,12 @@ services:
     depends_on:
       mas-postgres:
         condition: service_healthy
+    user: "200014:200014"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
 
 networks:
   matrix:
