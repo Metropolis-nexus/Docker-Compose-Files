@@ -2,4 +2,5 @@ signing_key_path: "/data/matrix.metropolis.nexus.signing.key"
 trusted_key_servers:
   - server_name: "matrix.org"
   - server_name: "grapheneos.org"
+  - server_name: "matrixrooms.info"
 suppress_key_server_warning: true
