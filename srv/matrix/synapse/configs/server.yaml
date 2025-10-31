@@ -5,7 +5,7 @@ use_frozen_dicts: false
 
 web_client_location: https://element.metropolis.nexus
 public_baseurl: https://matrix.metropolis.nexus
-serve_server_wellknown: true
+serve_server_wellknown: false
 
 presence:
   enabled: true
