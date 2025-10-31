@@ -216,6 +216,23 @@ services:
     cap_drop:
       - ALL
 
+  uvs:
+    container_name: uvs
+    image: ghcr.io/polarix-containers/matrix-user-verification-service:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000/tcp"
+    networks:
+      - matrix
+    env_file:
+      - uvs.env
+    user: "200016:200016"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
 networks:
   matrix:
   element:
