@@ -11,7 +11,6 @@ services:
       - ./web/load-test:/usr/share/jitsi-meet/load-test:Z
       - ./certs/fullchain.pem:/config/keys/cert.crt:Z,ro
       - ./certs/privkey.pem:/config/keys/cert.key:Z,ro
-      - ./cont-init-override:/etc/cont-init.d/10-config:Z
     ports:
       - 8443:443/tcp
     networks:
@@ -40,7 +39,6 @@ services:
     volumes:
       - ./prosody/config:/config:Z
       - ./prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
-      - ./cont-init-override:/etc/cont-init.d/10-config:Z
     networks:
       jitsi:
         aliases:
