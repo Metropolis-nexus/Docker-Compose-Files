@@ -1,0 +1,39 @@
+services:
+  omnipoly:
+    container_name: omnipoly
+    image: kweg/omnipoly:latest
+    restart: unless-stopped
+    ports:
+      - "80:80/tcp"
+    networks:
+      - omnipoly
+    env_file:
+      - omnipoly.env
+
+  languagetool:
+    container_name: languagetool
+    image: ghcr.io/polarix-containers/languagetools:latest
+    restart: unless-stopped
+    volumes:
+      - ./languagetool/ngrams:/ngrams:Z
+      - ./languagetool/fasttext:/fasttext:Z
+    networks:
+      - omnipoly
+    env_file:
+      - languagetool.env
+    user: "200019:200019"
+    read_only: true
+    tmpfs:
+      - /tmp:exec
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
+    cap_add:
+      - CAP_CHOWN
+      - CAP_DAC_OVERRIDE
+      - CAP_SETUID
+      - CAP_SETGID
+
+networks:
+  omnipoly:
