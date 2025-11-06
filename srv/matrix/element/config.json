@@ -6,6 +6,11 @@
       "server_name": "metropolis.nexus"
     }
   },
+  "features": {
+    "feature_report_to_moderators": true,
+    "feature_pinning": true,
+    "feature_jump_to_date": true
+  },
   "show_labs_settings": true,
   "default_federate": true,
   "default_country_code": "US",
