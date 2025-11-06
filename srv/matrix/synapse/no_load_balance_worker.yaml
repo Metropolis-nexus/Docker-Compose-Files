@@ -1,8 +1,8 @@
 worker_app: synapse.app.generic_worker
-worker_name: generic-worker-1
+worker_name: no_load_balance_worker
 
 worker_listeners:
-  - port: 8009
+  - port: 8011
     type: http
     tls: false
     x_forwarded: true

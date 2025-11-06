@@ -1,5 +1,5 @@
 worker_app: synapse.app.generic_worker
-worker_name: generic-worker-2
+worker_name: generic_worker-2
 
 worker_listeners:
   - port: 8010

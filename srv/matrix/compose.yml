@@ -43,7 +43,7 @@ services:
       - ALL
 
   synapse:
-    image: ghcr.io/polarix-containers/synapse:latest
+    image: ghcr.io/polarix-containers/synapse:antispam
     container_name: synapse
     restart: unless-stopped
     volumes:
@@ -66,9 +66,9 @@ services:
       - ALL
     entrypoint: ["python3", "start.py", "run", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
 
-  generic-worker-1:
-    image: ghcr.io/polarix-containers/synapse:latest
-    container_name: generic-worker-1
+  generic_worker-1:
+    image: ghcr.io/polarix-containers/synapse:antispam
+    container_name: generic_worker-1
     restart: unless-stopped
     volumes:
       - ./synapse:/data:Z
@@ -93,11 +93,11 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/generic-worker-1.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
+    entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/generic_worker-1.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
 
-  generic-worker-2:
-    image: ghcr.io/polarix-containers/synapse:latest
-    container_name: generic-worker-2
+  generic_worker-2:
+    image: ghcr.io/polarix-containers/synapse:antispam
+    container_name: generic_worker-2
     restart: unless-stopped
     volumes:
       - ./synapse:/data:Z
@@ -122,11 +122,11 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/generic-worker-2.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
+    entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/generic_worker-2.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
 
-  no-load-balance-worker:
-    image: ghcr.io/polarix-containers/synapse:latest
-    container_name: no-load-balance-worker
+  no_load_balance_worker:
+    image: ghcr.io/polarix-containers/synapse:antispam
+    container_name: no_load_balance_worker
     restart: unless-stopped
     volumes:
       - ./synapse:/data:Z
@@ -151,7 +151,7 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/no-load-balance-worker.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
+    entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/no_load_balance_worker.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
 
   element:
     image: ghcr.io/polarix-containers/element-web:latest
@@ -232,6 +232,40 @@ services:
       - "no-new-privileges=true"
     cap_drop:
       - ALL
+
+  draupnir:
+    container_name: draupnir
+    image: gnuxie/draupnir:latest
+    restart: unless-stopped
+    volumes:
+      - ./draupnir:/data:Z
+    ports:
+      - "8082:8082/tcp"
+    networks:
+      - matrix
+    user: "300008:300008"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+    command: ["bot", "--draupnir-config", "/data/config/production.yaml"]
+
+  draupnir_unprivileged:
+    container_name: draupnir_unprivileged
+    image: gnuxie/draupnir:latest
+    restart: unless-stopped
+    volumes:
+      - ./draupnir_unprivileged:/data:Z
+    networks:
+      - matrix
+    user: "300008:300008"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+    command: ["bot", "--draupnir-config", "/data/config/production.yaml"]
 
 networks:
   matrix:

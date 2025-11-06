@@ -1,0 +1,74 @@
+homeserverUrl: "https://matrix.metropolis.nexus"
+rawHomeserverUrl: "https://matrix.metropolis.nexus"
+accessToken: REDACTED
+
+pantalaimon:
+  use: false
+
+experimentalRustCrypto: false
+
+dataPath: "/data/storage"
+autojoinOnlyIfManager: true
+recordIgnoredInvites: true
+managementRoom: RERACTED
+logLevel: "INFO"
+verifyPermissionsOnStartup: true
+noop: false
+disableServerACL: false
+
+automaticallyRedactForReasons:
+  - "spam"
+  - "csam"
+  - "loli"
+  - "gore"
+
+protectAllJoinedRooms: false
+backgroundDelayMS: 500
+
+admin:
+  enableMakeRoomAdminCommand: false
+
+commands:
+  allowNoPrefix: true
+  symbolPrefixes:
+    - "!"
+  additionalPrefixes:
+    - "draupnir"
+    - "mod"
+
+  ban:
+    defaultReasons:
+      - "spam"
+      - "csam"
+      - "loli"
+      - "gore"
+      - "coc"
+      - "troll"
+      - "impersonation"
+
+protections:
+  wordlist:
+    # Case insensitive, no regex
+    words:
+      - REDACTED
+    minutesBeforeTrusting: REDACTED
+
+roomStateBackingStore:
+  enabled: true
+
+#safeMode:
+#  # The option for entering safe mode when Draupnir fails to start up.
+#  # - "RecoveryOnly" will only start the bot in safe mode when there are recovery options available. This is the default.
+#  # - "Never" will never start the bot in safe mode when Draupnir fails to start normally.
+#  # - "Always" will always start the bot in safe mode when Draupnir fails to start normally.
+#  bootOption: Never
+
+health:
+  healthz:
+    enabled: false
+
+web:
+  enabled: false
+
+pollReports: false
+displayReports: true
