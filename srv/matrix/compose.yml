@@ -224,6 +224,9 @@ services:
       - "3000:3000/tcp"
     networks:
       - matrix
+    depends_on:
+      synapse:
+        condition: service_healthy
     env_file:
       - uvs.env
     user: "200016:200016"
@@ -243,6 +246,9 @@ services:
       - "8082:8082/tcp"
     networks:
       - matrix
+    depends_on:
+      synapse:
+        condition: service_healthy
     user: "300008:300008"
     read_only: true
     security_opt:
@@ -259,6 +265,9 @@ services:
       - ./draupnir_unprivileged:/data:Z
     networks:
       - matrix
+    depends_on:
+      synapse:
+        condition: service_healthy
     user: "300008:300008"
     read_only: true
     security_opt:
