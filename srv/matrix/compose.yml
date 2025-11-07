@@ -43,7 +43,7 @@ services:
       - ALL
 
   synapse:
-    image: ghcr.io/polarix-containers/synapse:antispam
+    image: ghcr.io/polarix-containers/synapse:antispam-rc
     container_name: synapse
     restart: unless-stopped
     volumes:
@@ -67,7 +67,7 @@ services:
     entrypoint: ["python3", "start.py", "run", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
 
   generic_worker-1:
-    image: ghcr.io/polarix-containers/synapse:antispam
+    image: ghcr.io/polarix-containers/synapse:antispam-rc
     container_name: generic_worker-1
     restart: unless-stopped
     volumes:
@@ -96,7 +96,7 @@ services:
     entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/generic_worker-1.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
 
   generic_worker-2:
-    image: ghcr.io/polarix-containers/synapse:antispam
+    image: ghcr.io/polarix-containers/synapse:antispam-rc
     container_name: generic_worker-2
     restart: unless-stopped
     volumes:
@@ -125,7 +125,7 @@ services:
     entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/generic_worker-2.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
 
   no_load_balance_worker:
-    image: ghcr.io/polarix-containers/synapse:antispam
+    image: ghcr.io/polarix-containers/synapse:antispam-rc
     container_name: no_load_balance_worker
     restart: unless-stopped
     volumes:
@@ -267,9 +267,25 @@ services:
       - ALL
     command: ["bot", "--draupnir-config", "/data/config/production.yaml"]
 
+  synapse-admin:
+    container_name: synapse-admin
+    image: ghcr.io/etkecc/synapse-admin:latest
+    restart: unless-stopped
+    ports:
+      - "8083:80"
+    networks:
+      - synapse-admin
+    user: "300009:300009"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
 networks:
   matrix:
   element:
+  synapse-admin:
   synapse-postgres:
     internal: true
   valkey:
