@@ -9,7 +9,3 @@ worker_listeners:
     resources:
       - names: [client, federation]
         compress: false
-  - port: 9093
-    type: http
-    resources:
-      - names: [replication]
