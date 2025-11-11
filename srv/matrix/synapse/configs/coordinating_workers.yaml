@@ -18,9 +18,9 @@ instance_map:
     port: 9093
 
 stream_writers:
-#  events:
-#    - generic_worker-1
-#    - generic_worker-2
+  events:
+    - generic_worker-1
+    - generic_worker-2
   receipts:
     - generic_worker-1
     - generic_worker-2

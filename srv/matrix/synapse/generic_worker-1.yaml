@@ -11,6 +11,5 @@ worker_listeners:
         compress: false
   - port: 9093
     type: http
-    tls: false
     resources:
       - names: [replication]
