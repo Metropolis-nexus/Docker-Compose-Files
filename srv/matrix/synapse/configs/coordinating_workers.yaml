@@ -10,3 +10,20 @@ instance_map:
   main:
     host: 'synapse'
     port: 9093
+  generic_worker-1:
+    host: 'generic_worker-1'
+    port: 9093
+  generic_worker-2:
+    host: 'generic_worker-2'
+    port: 9093
+
+stream_writers:
+  events:
+    - generic_worker-1
+    - generic_worker-2
+  receipts:
+    - generic_worker-1
+    - generic_worker-2
+  device_lists:
+    - generic_worker-1
+    - generic_worker-2
