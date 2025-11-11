@@ -22,6 +22,7 @@ services:
       - "no-new-privileges=true"
     cap_drop:
       - ALL
+    runtime: crun
 
   valkey:
     container_name: valkey
@@ -65,6 +66,7 @@ services:
     cap_drop:
       - ALL
     entrypoint: ["python3", "start.py", "run", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
+    runtime: crun
 
   generic_worker-1:
     image: ghcr.io/polarix-containers/synapse:antispam-rc
@@ -94,6 +96,7 @@ services:
     cap_drop:
       - ALL
     entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/generic_worker-1.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
+    runtime: crun
 
   generic_worker-2:
     image: ghcr.io/polarix-containers/synapse:antispam-rc
@@ -123,6 +126,7 @@ services:
     cap_drop:
       - ALL
     entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/generic_worker-2.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
+    runtime: crun
 
   no_load_balance_worker:
     image: ghcr.io/polarix-containers/synapse:antispam-rc
@@ -152,6 +156,7 @@ services:
     cap_drop:
       - ALL
     entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/no_load_balance_worker.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
+    runtime: crun
 
   element:
     image: ghcr.io/polarix-containers/element-web:latest
