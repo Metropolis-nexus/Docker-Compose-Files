@@ -25,7 +25,7 @@ services:
 
   server:
     container_name: server
-    image: ghcr.io/polarix-containers/authentik:2025.10.1
+    image: ghcr.io/polarix-containers/authentik:2025.10.2
     restart: unless-stopped
     command: server
     volumes:
@@ -51,7 +51,7 @@ services:
 
   worker:
     container_name: worker
-    image: ghcr.io/polarix-containers/authentik:2025.10.1
+    image: ghcr.io/polarix-containers/authentik:2025.10.2
     restart: unless-stopped
     command: worker
     volumes:
