@@ -9,7 +9,10 @@
   "features": {
     "feature_report_to_moderators": true,
     "feature_pinning": true,
-    "feature_jump_to_date": true
+    "feature_jump_to_date": true,
+    "feature_mjolnir": true,
+    "feature_bridge_state": true,
+    "feature_ask_to_join": true
   },
   "show_labs_settings": true,
   "default_federate": true,
@@ -44,7 +47,7 @@
      "voip": true,
      "widgets": true,
      "advancedSettings": true,
-     "thirdPartyId": true,
+     "thirdPartyId": false,
      "registration": false,
      "passwordReset": false,
      "deactivate": false,
@@ -52,7 +55,7 @@
      "roomHistorySettings": true,
      "TimelineEnableRelativeDates": false,
      "BulkUnverifiedSessionsReminder": true,
-     "locationSharing" :false,
+     "locationSharing": false,
      "allowCreatingPublicRooms": true,
      "allowCreatingPublicSpaces": true
   }
