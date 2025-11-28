@@ -12,6 +12,8 @@
     "feature_jump_to_date": true,
     "feature_mjolnir": true,
     "feature_bridge_state": true,
+    "feature_custom_themes": false,
+    "feature_location_share_live": false,
     "feature_ask_to_join": true
   },
   "show_labs_settings": true,
@@ -47,6 +49,8 @@
      "voip": true,
      "widgets": true,
      "advancedSettings": true,
+     "shareQrCode": true,
+     "shareSocial": false,
      "thirdPartyId": false,
      "registration": false,
      "passwordReset": false,
