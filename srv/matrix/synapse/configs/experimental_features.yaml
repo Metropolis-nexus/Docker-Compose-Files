@@ -1,6 +1,9 @@
 experimental_features:
+  msc2815_enabled: true # Allow room moderators to view redacted event content
   msc3266_enabled: true # Room summary API - Needed for Element Call
+  msc3720_enabled: true # Account status endpoint
   msc3773_enabled: true # Notifications for threads
   msc4108_enabled: true # Login with QR code
   msc4222_enabled: true # Adding state_after to sync v2 - Needed for Element Call
   msc4267_enabled: true # Advertise `forget_rooms_on_leave` config
+  msc4277_enabled: true # Harmonizing the reporting endpoints
