@@ -1,5 +1,5 @@
-homeserverUrl: "https://matrix.metropolis.nexus"
-rawHomeserverUrl: "https://matrix.metropolis.nexus"
+homeserverUrl: "http://synapse:8008"
+rawHomeserverUrl: "http://synapse:8008"
 accessToken: REDACTED
 
 pantalaimon:
