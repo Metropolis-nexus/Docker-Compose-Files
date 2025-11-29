@@ -11,8 +11,8 @@ media_upload_limits:
   max_size: 1G
 
 media_retention:
-  local_media_lifetime: 1y
-  remote_media_lifetime: 45d
+  local_media_lifetime: 180d
+  remote_media_lifetime: 30d
 
 url_preview_enabled: true
 
