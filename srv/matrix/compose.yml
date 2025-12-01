@@ -49,6 +49,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./synapse:/data:Z
+      - ./logs:/logs:Z
     ports:
       - "8008:8008/tcp"
     networks:
@@ -158,24 +159,6 @@ services:
     entrypoint: ["python3", "start.py", "run", "-m", "synapse.app.generic_worker", "--config-path=/data/no_load_balance_worker.yaml", "--config-path=/data/homeserver.yaml", "--config-path=/data/configs"]
     runtime: crun
 
-  element:
-    image: ghcr.io/polarix-containers/element-web:latest
-    container_name: element
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./element/config.json:/app/config.json:ro,Z
-    user: "101:101"
-    read_only: true
-    tmpfs:
-      - /etc/nginx/conf.d:size=50M,mode=0770,noexec,nosuid,nodev,uid=101
-      - /var/cache/nginx:size=50M,mode=0770,noexec,nosuid,nodev,uid=101
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
-
   mas-postgres:
     container_name: mas-postgres
     image: ghcr.io/polarix-containers/postgres:18
@@ -207,7 +190,7 @@ services:
     volumes:
       - ./mas/config.yaml:/config.yaml:Z
     ports:
-      - "8081:8080/tcp"
+      - "8080:8080/tcp"
     networks:
       - matrix
       - mas-postgres
@@ -248,7 +231,7 @@ services:
     volumes:
       - ./draupnir:/data:Z
     ports:
-      - "8082:8082/tcp"
+      - "8081:8081/tcp"
     networks:
       - matrix
     depends_on:
@@ -281,15 +264,48 @@ services:
       - ALL
     command: ["bot", "--draupnir-config", "/data/config/production.yaml"]
 
+  element:
+    image: ghcr.io/polarix-containers/element-web:latest
+    container_name: element
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./element/config.json:/app/config.json:ro,Z
+    user: "101:101"
+    read_only: true
+    tmpfs:
+      - /etc/nginx/conf.d:size=50M,mode=0770,noexec,nosuid,nodev,uid=101
+      - /var/cache/nginx:size=50M,mode=0770,noexec,nosuid,nodev,uid=101
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  element-admin:
+    container_name: element-admin
+    image: oci.element.io/element-admin:latest
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    networks:
+      - element-admin
+    user: "300009:300009"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
   synapse-admin:
     container_name: synapse-admin
     image: ghcr.io/etkecc/synapse-admin:latest
     restart: unless-stopped
     ports:
-      - "8083:80"
+      - "8084:80"
     networks:
       - synapse-admin
-    user: "300009:300009"
+    user: "300010:300010"
     read_only: true
     security_opt:
       - "no-new-privileges=true"
@@ -299,6 +315,7 @@ services:
 networks:
   matrix:
   element:
+  element-admin:
   synapse-admin:
   synapse-postgres:
     internal: true
