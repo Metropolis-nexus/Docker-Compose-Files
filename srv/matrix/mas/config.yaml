@@ -75,7 +75,7 @@ upstream_oauth2:
       client_id: "REDACTED"
       client_secret: "REDACTED"
       token_endpoint_auth_method: client_secret_basic
-      scope: "openid profile email"
+      scope: "openid profile email offline_access"
       discovery_mode: oidc
       pkce_method: always
       fetch_userinfo: true
