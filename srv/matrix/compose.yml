@@ -269,7 +269,7 @@ services:
     container_name: element
     restart: unless-stopped
     ports:
-      - "8082:8080"
+      - "8083:8080"
     volumes:
       - ./element/config.json:/app/config.json:ro,Z
     user: "101:101"
@@ -287,7 +287,7 @@ services:
     image: oci.element.io/element-admin:latest
     restart: unless-stopped
     ports:
-      - "8083:8080"
+      - "8084:8080"
     networks:
       - element-admin
     user: "300009:300009"
@@ -302,7 +302,7 @@ services:
     image: ghcr.io/etkecc/synapse-admin:latest
     restart: unless-stopped
     ports:
-      - "8084:80"
+      - "8085:80"
     networks:
       - synapse-admin
     user: "300010:300010"
