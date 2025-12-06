@@ -19,7 +19,6 @@
     "feature_group_calls": true,
     "feature_ask_to_join": true,
     "feature_sliding_sync": false,
-    "feature_simplified_sliding_sync": false,
     "feature_render_reaction_images": true
   },
   "show_labs_settings": true,
