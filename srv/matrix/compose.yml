@@ -204,6 +204,23 @@ services:
     cap_drop:
       - ALL
 
+  lk_jwt_service:
+    container_name: lk_jwt_service
+    image: ghcr.io/element-hq/lk-jwt-service:latest
+    restart: unless-stopped
+    ports:
+      - "8082:8080/tcp"
+    networks:
+      - lk_jwt_service
+    env_file:
+      - lk_jwt_service.env
+    user: "300011:300011"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
   uvs:
     container_name: uvs
     image: ghcr.io/polarix-containers/matrix-user-verification-service:latest
@@ -282,8 +299,8 @@ services:
     cap_drop:
       - ALL
 
-  element-admin:
-    container_name: element-admin
+  element_admin:
+    container_name: element_admin
     image: oci.element.io/element-admin:latest
     restart: unless-stopped
     ports:
@@ -297,8 +314,8 @@ services:
     cap_drop:
       - ALL
 
-  synapse-admin:
-    container_name: synapse-admin
+  synapse_admin:
+    container_name: synapse_admin
     image: ghcr.io/etkecc/synapse-admin:latest
     restart: unless-stopped
     ports:
@@ -314,6 +331,7 @@ services:
 
 networks:
   matrix:
+  lk_jwt_service:
   element:
   element-admin:
   synapse-admin:
