@@ -1,5 +1,6 @@
 experimental_features:
   msc2815_enabled: true # Allow room moderators to view redacted event content
+  msc3026_enabled: true # "Busy" presence state
   msc3266_enabled: true # Room summary API - Needed for Element Call
   msc3720_enabled: true # Account status endpoint
   msc3773_enabled: true # Notifications for threads
