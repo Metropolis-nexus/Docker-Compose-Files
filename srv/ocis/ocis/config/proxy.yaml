@@ -1,0 +1,15 @@
+role_assignment:
+  driver: oidc
+  oidc_role_mapper:
+    role_claim: role
+    role_mapping:
+      - role_name: admin
+        claim_value: admin
+      - role_name: user
+        claim_value: user
+
+role_quotas:
+  admin: 21474836480 #20GB
+  spaceadmin: 21474836480
+  user: 21474836480
+  guest: 1073741824 #1GB
