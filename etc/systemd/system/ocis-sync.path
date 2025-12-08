@@ -1,0 +1,8 @@
+Description=Monitor oCIS certificates
+
+[Path]
+PathChanged=/srv/ocis/certs
+Unit=ocis-sync.service
+
+[Install]
+WantedBy=multi-user.target
