@@ -1,0 +1,17 @@
+role_assignment:
+  driver: oidc
+  oidc_role_mapper:
+    role_claim: role
+    role_mapping:
+      - role_name: admin
+        claim_value: admin
+      - role_name: user
+        claim_value: user
+
+# Role IDs are hardcoded
+# https://github.com/opencloud-eu/opencloud/blob/db7c0a88dd3ffe7b8cd39105397eaa6f49f72a1d/services/settings/pkg/service/v0/settings.go#L4-L14
+# We are giving both admin and user 20GB by default
+
+role_quotas:
+  71881883-1768-46bd-a24d-a356a2afdf7f: 20000000000
+  d7beeea8-8ff4-406b-8fb6-ab2dd81e6b11: 20000000000

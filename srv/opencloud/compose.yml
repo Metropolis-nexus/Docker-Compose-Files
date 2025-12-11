@@ -1,0 +1,24 @@
+services:
+  ocis:
+    container_name: opencloud
+    image: opencloudeu/opencloud:latest
+    restart: unless-stopped
+    volumes:
+      - ./opencloud/config:/etc/opencloud:Z
+      - ./opencloud/data:/var/lib/opencloud:Z
+      - ./opencloud/logs:/logs:Z
+      - ./certs:/certs:Z,ro
+    ports:
+      - 9200:9200/tcp
+    env_file:
+      - opencloud.env
+    user: "1000:1000"
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+    entrypoint:
+      - /bin/sh
+#    command: [ "-c", "exec opencloud server" ]
+    command: [ "-c", "opencloud init || true; exec opencloud server" ]
+    runtime: runc
