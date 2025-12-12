@@ -1,0 +1,9 @@
+[Unit]
+Description=Monitor OpenCloud certificates
+
+[Path]
+PathChanged=/srv/opencloud/certs
+Unit=opencloud-sync.service
+
+[Install]
+WantedBy=multi-user.target
