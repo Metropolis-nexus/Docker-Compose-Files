@@ -1,15 +1,6 @@
 # Connectivity
 ZenArmor, OPNsense's Unbound block lists, and Cloudflare Secure Gateway all have too many false positives for Synapse to work properly. Even when they correctly flag a domain as suspicious, it still causes federation issues and not really achieving anything security wise. As such, the Matrix stack needs to be on a VLAN without ZenArmor, and the OS needs to be setup with its own Unbound forwarding to `1.1.1.2` instead of the usual setup.
 
-# crun
-Add crun to `/etc/docker/daemon.json`:
-
-```
-        "crun": {
-            "path": "/usr/sbin/crun"
-        }
-```
-
 # Postgres Optimizations
 
 Adjust `synapse-postgres/postgres.conf` to include these optimizations:

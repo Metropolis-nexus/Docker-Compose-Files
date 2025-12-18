@@ -1,4 +1,4 @@
-## Jitsi Setup
+# Jitsi Setup
 
 To set this up, you need to:
 - Comment out container hardening for the `web` and `prosody` containers in `compose.yml`
