@@ -25,7 +25,7 @@ services:
 
   keycloak:
     container_name: keycloak
-    image: quay.io/keycloak/keycloak:26.5.0
+    image: quay.io/keycloak/keycloak:26.5.1
     restart: unless-stopped
     volumes:
       - ./certs:/certs:Z
