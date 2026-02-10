@@ -287,6 +287,8 @@ services:
     restart: unless-stopped
     ports:
       - "8083:8080"
+    networks:
+      - element
     volumes:
       - ./element/config.json:/app/config.json:ro,Z
     user: "101:101"
