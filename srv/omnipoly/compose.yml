@@ -1,15 +1,4 @@
 services:
-  omnipoly:
-    container_name: omnipoly
-    image: kweg/omnipoly:latest
-    restart: unless-stopped
-    ports:
-      - "80:80/tcp"
-    networks:
-      - omnipoly
-    env_file:
-      - omnipoly.env
-
   languagetool:
     container_name: languagetool
     image: ghcr.io/polarix-containers/languagetools:latest
@@ -18,7 +7,7 @@ services:
       - ./languagetool/ngrams:/ngrams:Z
       - ./languagetool/fasttext:/fasttext:Z
     networks:
-      - omnipoly
+      - languagetool
     env_file:
       - languagetool.env
     user: "200019:200019"
@@ -35,5 +24,47 @@ services:
       - CAP_SETUID
       - CAP_SETGID
 
-networks:
+  libretranslate:
+    container_name: libretranslate
+    image: libretranslate/libretranslate:latest
+    restart: unless-stopped
+    volumes:
+      - ./libretranslate:/home/libretranslate:Z
+    networks:
+      - libretranslate
+    env_file:
+      - libretranslate.env
+    user: "1032:1032"
+    read_only: true
+    healthcheck:
+      test: ['CMD-SHELL', './venv/bin/python scripts/healthcheck.py']
+      interval: 10s
+      timeout: 4s
+      retries: 4
+      start_period: 5s
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
+
   omnipoly:
+    container_name: omnipoly
+    image: kweg/omnipoly:latest
+    restart: unless-stopped
+    ports:
+      - "80:80/tcp"
+    networks:
+      - languagetool
+      - libretranslate
+    env_file:
+      - omnipoly.env
+    user: "300013:300013"
+    read_only: true
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
+
+networks:
+  languagetool:
+  libretranslate:
