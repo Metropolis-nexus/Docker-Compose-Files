@@ -1,0 +1,109 @@
+services:
+  postgres:
+    container_name: postgres
+    image: ghcr.io/polarix-containers/postgres:18
+    restart: unless-stopped
+    volumes:
+      - ./postgres:/var/lib/postgresql/18/docker:Z
+      - ./postgres_dump:/dump:Z
+    networks:
+      - postgres
+    env_file:
+      - postgres.env
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "grist"]
+      interval: 15s
+      timeout: 5s
+    user: "200012:200012"
+    read_only: true
+    tmpfs:
+      - /var/run/postgresql:size=50M,mode=0770,uid=200012,gid=200012,noexec,nosuid,nodev
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
+  valkey:
+    container_name: valkey
+    image: ghcr.io/polarix-containers/valkey:9
+    restart: unless-stopped
+    volumes:
+      - ./valkey:/data:Z
+    networks:
+      - valkey
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping | grep PONG"]
+      interval: 15s
+      timeout: 5s
+    user: "200010:200010"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
+  versitygw:
+    container_name: versitygw
+    image: ghcr.io/polarix-containers/versitygw:latest
+    restart: unless-stopped
+    volumes:
+      - ./versitygw/data:/data:Z
+      - ./versitygw/iam:/iam:Z
+      - ./versitygw/metadata:/metadata:Z
+      - ./versitygw/versioning:/versioning:Z
+    networks:
+      - versitygw
+    env_file:
+      - versitygw.env
+    user: "200020:200020"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
+  s3cmd:
+    container_name: s3cmd
+    image: d3fk/s3cmd:latest
+    profiles: ["noauto"]
+    volumes:
+      - ./s3cmd/cfg:/root:Z
+    networks:
+      - versitygw
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
+  grist:
+    container_name: grist
+    image: gristlabs/grist:latest
+    restart: unless-stopped
+    volumes:
+      - ./grist:/persist:Z
+    ports:
+      - 8484:8484/tcp
+    networks:
+      - grist
+      - postgres
+      - valkey
+      - versitygw
+    env_file:
+      - grist.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    security_opt:
+      - "no-new-privileges=true"
+    runtime: runc
+
+networks:
+  grist:
+  postgres:
+    internal: true
+  valkey:
+    internal: true
+  versitygw:
+    internal: true
