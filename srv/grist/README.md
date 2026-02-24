@@ -2,6 +2,7 @@
 
 The Grist bucket has to be created manually:
 ```
+root@grist:/srv/grist# docker compose up -d versitygw
 root@grist:/srv/grist# docker exec -it versitygw /bin/ash
 versitygw admin create-user -a grist -s REDACTED -r user
 versitygw admin create-bucket -o grist --bucket grist
