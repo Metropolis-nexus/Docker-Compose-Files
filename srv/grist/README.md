@@ -1,4 +1,4 @@
-## S3 setup
+# S3 setup
 
 The Grist bucket has to be created manually:
 ```
