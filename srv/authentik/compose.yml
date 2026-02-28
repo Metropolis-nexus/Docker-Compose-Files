@@ -32,7 +32,6 @@ services:
       - ./authentik/data:/data:z
       - ./authentik/custom-templates:/templates:z
     ports:
-      - "9000:9000/tcp"
       - "9443:9443/tcp"
     networks:
       - authentik
