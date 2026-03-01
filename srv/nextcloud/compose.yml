@@ -79,6 +79,7 @@ services:
     networks:
       - mariadb
       - valkey
+      - nginx
     depends_on:
       mariadb:
         condition: service_healthy
