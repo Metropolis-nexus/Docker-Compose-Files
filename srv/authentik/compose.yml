@@ -72,6 +72,24 @@ services:
     cap_drop:
       - ALL
 
+  ldap:
+    container_name: ldap
+    image: ghcr.io/goauthentik/ldap:2026.2.0
+    restart: unless-stopped
+    ports:
+      - 389:3389/tcp
+      - 636:6636/tcp
+    networks:
+      - authentik
+    env_file:
+      - ldap.env
+    user: "300014:300014"
+    read_only: true
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
 networks:
   authentik:
   postgres:
