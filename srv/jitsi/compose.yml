@@ -165,17 +165,17 @@ services:
     cap_drop:
       - ALL
 
-  # Keycloak adapter
-  keycloak-adapter:
-    container_name: jitsi-keycloak-adapter
-    image: ghcr.io/nordeck/jitsi-keycloak-adapter-v2:latest
+  # OIDC adapter
+  oidc-adapter:
+    container_name: jitsi-oidc-adapter
+    image: ghcr.io/jitsi-contrib/jitsi-oidc-adapter:latest
     restart: unless-stopped
     ports:
       - 9000:9000/tcp
     networks:
-      - keycloak-adapter
+      - oidc-adapter
     env_file:
-      - keycloak-adapter.env
+      - oidc-adapter.env
     user: "300007:300007"
     read_only: true
     security_opt:
@@ -188,4 +188,4 @@ networks:
   etherpad:
   postgres:
     internal: true
-  keycloak-adapter:
+  oidc-adapter:
