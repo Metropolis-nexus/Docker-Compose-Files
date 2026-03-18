@@ -83,7 +83,7 @@ services:
       - authentik
     env_file:
       - ldap.env
-    user: "300014:300014"
+    user: "300016:300016"
     read_only: true
     security_opt:
       - "no-new-privileges=true"
@@ -97,7 +97,7 @@ services:
       - authentik
     env_file:
       - rac.env
-    user: "300016:300016"
+    user: "300017:300017"
     read_only: true
     security_opt:
       - "no-new-privileges=true"
