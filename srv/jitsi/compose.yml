@@ -2,12 +2,12 @@ services:
   # Frontend
   web:
     container_name: jitsi-web
-    image: jitsi/web:stable
+    image: ghcr.io/jitsi-contrib/hardened-images/web:stable
     restart: unless-stopped
     volumes:
-      - ./web:/config:Z
+      - ./web:/config:Z,ro
+      - ./transcripts:/usr/share/jitsi-meet/transcripts:Z,ro
       - ./web/crontabs:/var/spool/cron/crontabs:Z
-      - ./transcripts:/usr/share/jitsi-meet/transcripts:Z
       - ./web/load-test:/usr/share/jitsi-meet/load-test:Z
       - ./certs/fullchain.pem:/config/keys/cert.crt:Z,ro
       - ./certs/privkey.pem:/config/keys/cert.key:Z,ro
@@ -23,22 +23,22 @@ services:
     user: "300005:300005"
     read_only: true
     tmpfs:
-      - /var/lib/nginx:mode=0770,uid=300005,gid=300005,noexec,nosuid,nodev
-      - /run:mode=0770,uid=300005,gid=300005,noexec,nosuid,nodev
+      - /run:exec,size=16M,uid=300005,gid=300005
+      - /tmp:size=16M,uid=300005,gid=300005
     security_opt:
       - "no-new-privileges=true"
     cap_drop:
       - ALL
-    entrypoint: nginx -c /config/nginx/nginx.conf
 
   # XMPP server
   prosody:
     container_name: jitsi-prosody
-    image: jitsi/prosody:stable
+    image: ghcr.io/jitsi-contrib/hardened-images/prosody:stable
     restart: unless-stopped
     volumes:
-      - ./prosody/config:/config:Z
-      - ./prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
+      - ./prosody/config:/config:Z,ro
+      - ./prosody/prosody-plugins-custom:/prosody-plugins-custom:Z,ro
+      - ./prosody/storage:/var/lib/prosody:Z
     networks:
       jitsi:
         aliases:
@@ -48,19 +48,21 @@ services:
       - prosody.env
     user: "300006:300006"
     read_only: true
+    tmpfs:
+      - /run:exec,size=16M,uid=300006,gid=300006
+      - /tmp:size=16M,uid=300006,gid=300006
     security_opt:
       - "no-new-privileges=true"
     cap_drop:
       - ALL
-    entrypoint: /usr/bin/prosody --config /config/prosody.cfg.lua -F
 
   # Focus component
   jicofo:
     container_name: jitsi-jicofo
-    image: jitsi/jicofo:stable
+    image: ghcr.io/jitsi-contrib/hardened-images/jicofo:stable
     restart: unless-stopped
     volumes:
-      - ./jicofo:/config:Z
+      - ./jicofo:/config:Z,ro
     networks:
       - jitsi
     depends_on:
@@ -68,14 +70,23 @@ services:
     env_file:
       - common.env
       - jicofo.env
+    user: "300018:300018"
+    read_only: true
+    tmpfs:
+      - /run:exec,size=16M,uid=300018,gid=300018
+      - /tmp:size=16M,uid=300018,gid=300018
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
 
   # Video bridge
   jvb:
     container_name: jitsi-jvb
-    image: jitsi/jvb:stable
+    image: ghcr.io/jitsi-contrib/hardened-images/jvb:stable
     restart: unless-stopped
     volumes:
-      - ./jvb:/config:Z
+      - ./jvb:/config:Z,ro
     ports:
       - 10000:10000/udp
     networks:
@@ -85,26 +96,16 @@ services:
     env_file:
       - common.env
       - jvb.env
+    user: "300019:300019"
+    read_only: true
+    tmpfs:
+      - /run:exec,size=16M,uid=300019,gid=300019
+      - /tmp:size=16M,uid=300019,gid=300019
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
     runtime: crun
-
-  # Video recorder
-#  jibri:
-#    container_name: jitsi-jibri
-#    image: jitsi/jibri:stable
-#    restart: unless-stopped
-#    volumes:
-#      - ./jibri:/config:Z
-#    networks:
-#      - jitsi
-#    depends_on:
-#      - jicofo
-#    env_file:
-#      - common.env
-#      - jibri.env
-#    cap_add:
-#      - SYS_ADMIN
-#    shm_size: '2gb'
-#    runtime: crun
 
   # Whiteboard
   whiteboard:
