@@ -81,6 +81,9 @@ services:
       - 636:6636/tcp
     networks:
       - authentik
+    depends_on:
+      server:
+        condition: service_healthy
     env_file:
       - ldap.env
     user: "300016:300016"
@@ -95,6 +98,9 @@ services:
     image: ghcr.io/goauthentik/rac:2026.2.1
     networks:
       - authentik
+    depends_on:
+      server:
+        condition: service_healthy
     env_file:
       - rac.env
     user: "300017:300017"
