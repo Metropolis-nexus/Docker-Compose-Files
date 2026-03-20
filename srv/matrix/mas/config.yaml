@@ -20,7 +20,7 @@ http:
       port: 8081
     proxy_protocol: false
   trusted_proxies:
-  - 192.168.2.102/32
+  - 192.168.0.102/32
   public_base: https://mas.metropolis.nexus/
   issuer: https://mas.metropolis.nexus/
 database:
