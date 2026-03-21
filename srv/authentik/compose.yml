@@ -96,6 +96,7 @@ services:
   rac:
     container_name: rac
     image: ghcr.io/goauthentik/rac:2026.2.1
+    restart: unless-stopped
     networks:
       - authentik
     depends_on:
