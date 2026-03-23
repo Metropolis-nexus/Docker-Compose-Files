@@ -12,7 +12,7 @@ services:
       - ./certs/fullchain.pem:/config/keys/cert.crt:Z,ro
       - ./certs/privkey.pem:/config/keys/cert.key:Z,ro
     ports:
-      - 8443:443/tcp
+      - 8443:8443/tcp
     networks:
       - jitsi
       - etherpad
