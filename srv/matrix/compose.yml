@@ -316,14 +316,14 @@ services:
     cap_drop:
       - ALL
 
-  synapse_admin:
-    container_name: synapse_admin
-    image: ghcr.io/etkecc/synapse-admin:latest
+  ketesa:
+    container_name: ketesa
+    image: ghcr.io/etkecc/ketesa:latest
     restart: unless-stopped
     ports:
       - "8085:8080"
     networks:
-      - synapse-admin
+      - ketesa
     user: "300010:300010"
     read_only: true
     security_opt:
@@ -336,7 +336,7 @@ networks:
   lk_jwt_service:
   element:
   element-admin:
-  synapse-admin:
+  ketesa:
   synapse-postgres:
     internal: true
   valkey:
