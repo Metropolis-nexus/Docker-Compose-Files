@@ -3,7 +3,7 @@ ZenArmor, OPNsense's Unbound block lists, and Cloudflare Secure Gateway all have
 
 # Postgres Optimizations
 
-Adjust `synapse-postgres/postgres.conf` to include these optimizations:
+Adjust `synapse-postgres/postgresql.conf` to include these optimizations:
 
 ```
 # https://vadosware.io/post/everything-ive-seen-on-optimizing-postgres-on-zfs-on-linux/
