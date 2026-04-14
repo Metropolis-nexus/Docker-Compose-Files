@@ -82,7 +82,7 @@ services:
     volumes:
       - ./grist:/persist:Z
     ports:
-      - 8484:443/tcp
+      - 8484:8484/tcp
     networks:
       - grist
       - postgres
