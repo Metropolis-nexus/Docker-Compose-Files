@@ -10,4 +10,3 @@ experimental_features:
   msc4267_enabled: true # Advertise `forget_rooms_on_leave` config
   msc4277_enabled: true # Harmonizing the reporting endpoints
   msc4354_enabled: true # Sticky events
-  msc4380_enabled: true # Invite blocking
