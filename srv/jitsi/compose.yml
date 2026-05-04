@@ -23,12 +23,13 @@ services:
     user: "300005:300005"
     read_only: true
     tmpfs:
-      - /run:exec,size=16M,uid=300005,gid=300005
-      - /tmp:size=16M,uid=300005,gid=300005
+      - /run:size=16M,uid=300005,gid=300005,exec
+      - /tmp:size=16M,uid=300005,gid=300005,noexec
     security_opt:
       - "no-new-privileges=true"
     cap_drop:
       - ALL
+    runtime: runc
 
   # XMPP server
   prosody:
@@ -49,8 +50,8 @@ services:
     user: "300006:300006"
     read_only: true
     tmpfs:
-      - /run:exec,size=16M,uid=300006,gid=300006
-      - /tmp:size=16M,uid=300006,gid=300006
+      - /run:size=16M,uid=300006,gid=300006,exec
+      - /tmp:size=16M,uid=300006,gid=300006,noexec
     security_opt:
       - "no-new-privileges=true"
     cap_drop:
@@ -73,20 +74,21 @@ services:
     user: "300018:300018"
     read_only: true
     tmpfs:
-      - /run:exec,size=16M,uid=300018,gid=300018
-      - /tmp:size=16M,uid=300018,gid=300018
+      - /run:size=16M,uid=300018,gid=300018,exec
+      - /tmp:size=16M,uid=300018,gid=300018,noexec
     security_opt:
       - "no-new-privileges=true"
     cap_drop:
       - ALL
 
   # Video bridge
+  # Using the normal container here, because the hardened container is broken
   jvb:
     container_name: jitsi-jvb
-    image: ghcr.io/jitsi-contrib/hardened-images/jvb:stable
+    image: jitsi/jvb:stable
     restart: unless-stopped
     volumes:
-      - ./jvb:/config:Z,ro
+      - ./jvb:/config:Z
     ports:
       - 10000:10000/udp
     networks:
@@ -96,15 +98,6 @@ services:
     env_file:
       - common.env
       - jvb.env
-    user: "300019:300019"
-    read_only: true
-    tmpfs:
-      - /run:exec,size=16M,uid=300019,gid=300019
-      - /tmp:size=16M,uid=300019,gid=300019
-    security_opt:
-      - "no-new-privileges=true"
-    cap_drop:
-      - ALL
     runtime: crun
 
   # Whiteboard
