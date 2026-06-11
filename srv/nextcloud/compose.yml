@@ -2,7 +2,7 @@ services:
   mariadb:
     container_name: mariadb
     restart: unless-stopped
-    image: ghcr.io/polarix-containers/mariadb:11.4-alpine
+    image: ghcr.io/polarix-containers/mariadb:11.8-alpine
     volumes:
       - "./mariadb:/var/lib/mysql:Z"
     networks:
