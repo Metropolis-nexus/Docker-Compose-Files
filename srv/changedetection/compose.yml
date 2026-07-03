@@ -1,0 +1,28 @@
+services:
+  changedetection:
+    container_name: changedetection
+    image: ghcr.io/dgtlmoon/changedetection.io
+    restart: unless-stopped
+    volumes:
+      - ./data:/datastore:Z
+    ports:
+      - 5000:5000
+    env_file:
+      - changedetection.env
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+
+  browser-sockpuppet-chrome:
+    container_name: browser-sockpuppet-chrome
+    image: dgtlmoon/sockpuppetbrowser:latest
+    restart: unless-stopped
+    env_file:
+      - browser-sockpuppet-chrome.env
+    security_opt:
+      - "no-new-privileges=true"
+    cap_drop:
+      - ALL
+    cap_add:
+      - SYS_ADMIN
