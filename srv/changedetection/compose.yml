@@ -6,7 +6,7 @@ services:
     volumes:
       - ./data:/datastore:Z
     ports:
-      - 5000:5000
+      - 5000:5000/tcp
     env_file:
       - changedetection.env
     security_opt:
