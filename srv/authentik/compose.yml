@@ -74,7 +74,7 @@ services:
 
   ldap:
     container_name: ldap
-    image: ghcr.io/goauthentik/ldap:2026.8.3
+    image: ghcr.io/goauthentik/ldap:2026.8.5
     restart: unless-stopped
     ports:
       - 389:3389/tcp
@@ -95,7 +95,7 @@ services:
 
   rac:
     container_name: rac
-    image: ghcr.io/goauthentik/rac:2026.8.3
+    image: ghcr.io/goauthentik/rac:2026.8.5
     restart: unless-stopped
     networks:
       - authentik
